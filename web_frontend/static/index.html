@@ -1,0 +1,145 @@
+<!-- web_frontend/static/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpooling Platform</title>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    
+    <script>
+        function registerUser() {
+            // Gather user input
+            var firstName = document.getElementById('firstName').value;
+            var lastName = document.getElementById('lastName').value;
+            var mobile = document.getElementById('mobile').value;
+            var email = document.getElementById('email').value;
+
+            // Create user object
+            var user = {
+                first_name: firstName,
+                last_name: lastName,
+                mobile: mobile,
+                email: email
+            };
+
+            // Make API request to user registration endpoint
+            fetch('http://localhost:8081/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('User registration successful:', data);
+            })
+            .catch(error => {
+                console.error('Error registering user:', error);
+            });
+        }
+
+        function publishTrip() {
+            // Gather trip input
+            var pickupLocation = document.getElementById('pickupLocation').value;
+
+            // Create trip object
+            var trip = {
+                pickup_location: pickupLocation
+                // Add additional fields as needed
+            };
+
+            // Make API request to trip publishing endpoint
+            fetch('http://localhost:8082/trips/publish', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(trip)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Trip published successfully:', data);
+            })
+            .catch(error => {
+                console.error('Error publishing trip:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to Carpooling Platform</h1>
+
+    <!-- User Registration Form -->
+    <h2>User Registration</h2>
+    <form id="userRegistrationForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required><br>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required><br>
+
+        <label for="mobile">Mobile Number:</label>
+        <input type="text" id="mobile" name="mobile" required><br>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <button type="button" onclick="registerUser()">Register</button>
+    </form>
+
+    <!-- Trip Publishing Form -->
+    <h2>Trip Publishing</h2>
+    <form id="tripPublishForm">
+        <label for="pickupLocation">Pickup Location:</label>
+        <input type="text" id="pickupLocation" name="pickupLocation" required><br>
+
+        <!-- Additional fields for trip publishing -->
+
+        <button type="button" onclick="publishTrip()">Publish Trip</button>
+    </form>
+</body>
+</html>

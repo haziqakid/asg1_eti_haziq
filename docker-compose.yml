@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: carpool-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: carpool
+      MYSQL_USER: carpooluser
+      MYSQL_PASSWORD: carpoolpassword
+    ports:
+      - "3306:3306"
+
+  user_service:
+    build:
+      context: ./user_service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+
+  trip_service:
+    build:
+      context: ./trip_service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+
+  console_app:
+    build:
+      context: ./console_app
+    depends_on:
+      - user_service
+      - trip_service
+
+  web_frontend:
+    build:
+      context: ./web_frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user_service
+      - trip_service
